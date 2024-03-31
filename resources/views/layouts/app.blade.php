@@ -16,11 +16,17 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
+    <style>
+        body{
+            background-image: url("{{ asset('img/bg.jpg') }}");
+            background-size: cover;
+        }
+    </style>
 <body>
-    <div id="app">
+    <div id="app" class="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route('home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -30,7 +36,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('info.all') }}">{{ __('All Users') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('info.new') }}">{{ __('Add User') }}</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -73,8 +84,38 @@
         </nav>
 
         <main class="py-4">
+            @if (session('success'))
+            <div class="container">
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-6">
+                        <div class="alert alert-success" id="alerts" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if (session('error'))
+            <div class="container">
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-6">
+                        <div class="alert alert-danger" id="alerts" role="alert">
+                            {{ session('error') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             @yield('content')
         </main>
     </div>
+    <script>
+        var alert = document.getElementById('alerts');
+        if (alert) {
+            setTimeout(function() {
+                alert.style.display = 'none';
+            }, 3000); // Change 5000 to the desired duration in milliseconds (e.g., 5000 for 5 seconds)
+        }
+    </script>
 </body>
 </html>

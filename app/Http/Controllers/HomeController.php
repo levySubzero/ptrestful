@@ -60,7 +60,17 @@ class HomeController extends Controller
     {
         $data = $request->all();
 
-        // $this->validator($data)->validate();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'last_name' => 'required|string',
+            'age' => 'required|integer',
+            'town' => 'required|string',
+            'gender' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', 'Invalid information.');;
+        }
 
         User::create([
             'name' => $data['name'],
@@ -76,16 +86,27 @@ class HomeController extends Controller
 
     public function updateInfo(Request $request, $id=null)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'last_name' => 'required|string',
+            'age' => 'required|integer',
+            'town' => 'required|string',
+            'gender' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', 'Invalid information.');;
+        }
         $info = $request->all();
         $user = $id == null ? auth()->user() : User::where('id', $id)->first();
         $user->update($info);
-        return redirect()->back()->with('success', 'Updated Successfuly.');;
+        return redirect()->back()->with('success', 'Updated Successfuly.');
     }
 
     public function destroy($id)
     {
         User::find($id)->delete();
         return redirect()->back()
-                        ->with('success','User deleted successfully');
+                        ->with('success','User deleted');
     }
 }

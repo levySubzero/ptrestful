@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -19,13 +22,14 @@ class HomeController extends Controller
 
     public function storeInfo(Request $request, $id=null)
     {
+        Log::info(json_encode($request->name));
         $data = $request->all();
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'last_name' => 'required|string',
-            'age' => 'required|integer'
-            'town' => 'required|string'
+            'age' => 'required|integer',
+            'town' => 'required|string',
             'gender' => 'required'
         ]);
 
@@ -55,21 +59,8 @@ class HomeController extends Controller
 
     public function updateInfo(Request $request, $id=null)
     {
+        // Log::info(json_encode($request->name));
         $info = $request->all();
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'last_name' => 'required|string',
-            'age' => 'required|integer'
-            'town' => 'required|string'
-            'gender' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status'=>'error',
-                'message'=>['error'=>$validator->errors()->all()],
-            ]);
-        }
         $user = $id == null ? auth()->user() : User::where('id', $id)->first();
         $user->update($info);
         return response()->json([
@@ -83,7 +74,7 @@ class HomeController extends Controller
     {
         User::find($id)->delete();
         return response()->json([
-            'status'=>'error',
+            'status'=>'Ok',
             'message'=>'User deleted',
         ]);
     }

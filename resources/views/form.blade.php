@@ -3,6 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+    
         <div class="col-md-8">
             <div class="card">
                 @if(isset($user))
@@ -69,14 +70,16 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="town" class="col-md-4 col-form-label text-md-end">{{ __('Gender') }}</label>
-
-                                <select class="form-select form-select-lg mb-3" name="gender" aria-label=".form-select-lg example">
-                                    <option {{ is_null($user->gender) ? 'selected' : '' }}>Select Gender</option>
-                                    <option value="M" {{ $user->gender == "M" ? 'selected' : '' }}>Male</option>
-                                    <option value="F" {{ $user->gender == "F" ? 'selected' : '' }}>Female</option>
-                                    <option value="NA" {{ $user->gender == "NA" ? 'selected' : '' }}>Prefer not to say</option>
-                                </select>
+                                    <label for="gender" class="col-md-4 col-form-label text-md-end">{{ __('Gender') }}</label>
+                                    <div class="col-md-6">
+                                    <select class="form-select form-select mb-3" name="gender" aria-label=".form-select example">
+                                        <option {{ is_null($user->gender) ? 'selected' : '' }}>Select Gender</option>
+                                        <option value="M" {{ $user->gender == "M" ? 'selected' : '' }}>Male</option>
+                                        <option value="F" {{ $user->gender == "F" ? 'selected' : '' }}>Female</option>
+                                        <option value="NA" {{ $user->gender == "NA" ? 'selected' : '' }}>Prefer not to say</option>
+                                    </select>
+                                </div>
+                                
                             </div>
 
                             <div class="row mb-0">
@@ -152,13 +155,14 @@
 
                             <div class="row mb-3">
                                 <label for="gender" class="col-md-4 col-form-label text-md-end">{{ __('Gender') }}</label>
-
-                                <select class="form-select form-select-lg mb-3" name="gender" aria-label=".form-select-lg example">
-                                    <option selected>Select Gender</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                    <option value="NA">Prefer not to say</option>
-                                </select>
+                                <div class="col-md-6">
+                                    <select class="form-select form-select mb-3" name="gender" aria-label=".form-select-lg example">
+                                        <option selected>Select Gender</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="NA">Prefer not to say</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="row mb-0">

@@ -93,8 +93,7 @@ class ForgotPasswordController extends Controller
         $pageTitle = 'Account Recovery';
         $email = $user->email;
         session()->put('pass_res_mail',$email);
-        $notify[] = ['success', 'Password reset email sent successfully'];
-        return redirect()->route('password.code.verify')->withNotify($notify);
+        return redirect()->route('password.code.verify')->with('success','Password reset email sent successfully');
     }
 
     public function codeVerify(){
@@ -115,11 +114,10 @@ class ForgotPasswordController extends Controller
         $code =  str_replace(' ', '', $request->code);
 
         if (PasswordReset::where('token', $code)->count() != 1) {
-            $notify[] = ['error', 'Invalid token'];
-            return redirect()->route('password.request')->withNotify($notify);
+            return redirect()->route('password.request')->with('error', 'Invalid token');
         }
         $notify[] = ['success', 'You can change your password.'];
-        return redirect()->route('password.reset', $code)->withNotify($notify);
+        return redirect()->route('password.reset', $code)->with('success', 'You can change your password.');
     }
 
 }

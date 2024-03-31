@@ -69,9 +69,7 @@ class ResetPasswordController extends Controller
         //     'time' => @$userIpInfo['time']
         // ]);
 
-
-        $notify[] = ['success', 'Password changed successfully'];
-        return redirect()->route('login')->withNotify($notify);
+        return redirect()->route('login')->with('success','Password changed successfully');
     }
 
 
