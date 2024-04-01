@@ -7,6 +7,10 @@ use App\Models\PasswordReset;
 use App\Models\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 class ForgotPasswordController extends Controller
 {
@@ -28,6 +32,52 @@ class ForgotPasswordController extends Controller
         $this->middleware('guest');
     }
 
+    private function sendSmtpMail($receiver_email, $receiver_name, $subject, $message)
+    {
+        $config = [
+            'host'=> 'smtp.gmail.com',
+            'port'=> '465',
+            'username'=> 'dev.brainverse@gmail.com',
+            'password'=> 'hacd ijtp fbmm naso',
+            'enc'=> 'ssl',
+        ];
+
+        $mail = new PHPMailer(true); // Create a new PHPMailer instance
+
+        try {
+            // Server settings
+            $mail->isSMTP(); // Set mailer to use SMTP
+            $mail->Host       = $config['host']; // SMTP server host
+            $mail->SMTPAuth   = true; // Enable SMTP authentication
+            $mail->Username   = $config['username']; // SMTP username
+            $mail->Password   = $config['password']; // SMTP password
+            if ($config['enc'] == 'ssl') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Enable SSL encryption
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+            }
+            $mail->Port = $config['port']; // SMTP port
+            $mail->CharSet = 'UTF-8'; // Set character encoding
+
+            // Sender
+            $mail->setFrom('myapi@mail.com', 'My Api'); // Set sender's email and name
+            
+            // Recipients
+            $mail->addAddress($receiver_email, $receiver_name); // Add recipient
+            $mail->addReplyTo('myapi@mail.com', 'My Api'); // Set reply-to address
+
+            // Content
+            $mail->isHTML(true); // Set email format to HTML
+            $mail->Subject = $subject; // Set email subject
+            $mail->Body    = $message; // Set email body
+
+            // Send the email
+            $mail->send();
+        } catch (Exception $e) {
+            // Handle any exceptions
+            throw new Exception($e);
+        }
+    }
 
     public function showLinkRequestForm()
     {
@@ -40,6 +90,7 @@ class ForgotPasswordController extends Controller
         $pageTitle = "Forgot Password";
         return view(activeTemplate() . 'auth.passwords.createpass', compact('pageTitle', 'userId'));
     }
+
     public function verification()
     {
         $pageTitle = "Forgot Password";
@@ -69,7 +120,7 @@ class ForgotPasswordController extends Controller
 
         if (!$user) {
             $notify[] = ['error', 'User not found.'];
-            return back()->withNotify($notify);
+            return back()->with('error', 'User not found.');
         }
 
         PasswordReset::where('email', $user->email)->delete();
@@ -79,6 +130,21 @@ class ForgotPasswordController extends Controller
         $password->token = $code;
         $password->created_at = \Carbon\Carbon::now();
         $password->save();
+
+        $subject = 'Verification Code';
+        $message = 'Your verification code is '. $code ;
+
+        try {
+            $this->sendSmtpMail($user->email, $user->name, $subject, $message);
+            $pageTitle = 'Account Recovery';
+            $email = $user->email;
+            session()->put('pass_res_mail',$email);
+            return redirect()->route('password.code.verify')->with('success','Password reset email sent successfully');
+        } catch (Exception $e) {
+            $pageTitle = 'Account Recovery';    $email = $user->email;
+            session()->put('pass_res_mail',$email);        
+            return redirect()->route('password.code.verify')->with('success','SMTP Error, Use Code '.$code);
+        }
 
         // $userIpInfo = getIpInfo();
         // $userBrowserInfo = osBrowser();
@@ -90,10 +156,7 @@ class ForgotPasswordController extends Controller
         //     'time' => @$userIpInfo['time']
         // ]);
 
-        $pageTitle = 'Account Recovery';
-        $email = $user->email;
-        session()->put('pass_res_mail',$email);
-        return redirect()->route('password.code.verify')->with('success','Password reset email sent successfully');
+        
     }
 
     public function codeVerify(){

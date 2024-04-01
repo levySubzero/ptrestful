@@ -3,9 +3,11 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Recover Account') }}</div>
-
                     <div class="card-body">
+                <div class="card-body">
+                        <div style="display: flex; justify-content: center;">
+                            <h5 class="py-3">{{ __('Recover Account') }}</h5>
+                        </div>
 
                     <form action="{{ route('password.verify.code') }}" method="POST">
                         @csrf
@@ -23,8 +25,8 @@
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-center align-items-center">
-                            <div class="col-md-6 d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="col-md-6 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-dark mx-4">
                                     {{ __('Verify Code') }}
                                 </button>
                             </div>

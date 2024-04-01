@@ -7,9 +7,10 @@
         <div class="col-md-8">
             <div class="card">
                 @if(isset($user))
-                    <div class="card-header">{{ __('Update User Information') }}</div>
-
                     <div class="card-body">
+                        <div style="display: flex; justify-content: center;">
+                            <h5 class="py-3">Edit User Info</h5>
+                        </div>
                         <form method="POST" action="{{ route('info.update', $user->id) }}">
                             @csrf
                             @method('PUT')
@@ -84,7 +85,7 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-dark">
                                         {{ __('Update') }}
                                     </button>
                                 </div>
@@ -92,9 +93,10 @@
                         </form>
                     </div>
                 @else
-                    <div class="card-header">{{ __('Add User Information') }}</div>
-
                     <div class="card-body">
+                        <div style="display: flex; justify-content: center;">
+                            <h5 class="py-3">Add User Info</h5>
+                        </div>
                         <form method="POST" action="{{ route('info.store') }}">
                             @csrf
                             <div class="row mb-3">
@@ -167,7 +169,7 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-dark">
                                         {{ __('Submit') }}
                                     </button>
                                 </div>
