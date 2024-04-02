@@ -17,8 +17,6 @@ use App\Http\Controllers\InterfaceController;
 
 Auth::routes();
 
-
-// Route::post('/logout', [InterfaceController::class, 'index']);
 Route::get('password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetCodeEmail'])->name('password.email');
 Route::get('password/code-verify', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'codeVerify'])->name('password.code.verify');
@@ -37,4 +35,3 @@ Route::get('/allInfo', [App\Http\Controllers\HomeController::class, 'allInfo'])-
 Route::put('/saveInfo/{id?}', [App\Http\Controllers\HomeController::class, 'updateInfo'])->name('info.update');
 Route::post('/storeInfo', [App\Http\Controllers\HomeController::class, 'storeInfo'])->name('info.store');
 Route::get('/deleteInfo/{id}', [App\Http\Controllers\HomeController::class, 'destroy'])->name('info.delete');
-// Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
